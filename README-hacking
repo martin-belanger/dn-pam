@@ -1,0 +1,7 @@
+Commit log requirements
+=======================
+Each commit log should always start with a one-line summary, the second
+line should be blank, and the remaining lines are usually ChangeLog-style
+entries for all affected files, except the leading TABs which should
+be omitted.  It's OK to write a few lines of prose describing the change,
+when the summary and ChangeLog entries don't give enough of the big picture.
