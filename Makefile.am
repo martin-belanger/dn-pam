@@ -5,7 +5,7 @@
 AUTOMAKE_OPTIONS = 1.9 gnu dist-bzip2 check-news
 
 #SUBDIRS = tests modules po conf doc examples xtests
-SUBDIRS = modules
+SUBDIRS = modules po
 
 CLEANFILES = *~
 

@@ -47,26 +47,29 @@ set_password(const char *forwho, const char *shadow, const char *remember)
     int nremember = atoi(remember);
     char *passwords[] = { pass, towhat };
 
-    /* read the password from stdin (a pipe from the pam_unix module) */
+    /* read the password from stdin (a pipe from the pam_hash-only module) */
 
     npass = read_passwords(STDIN_FILENO, 2, passwords);
 
-    if (npass != 2) {	/* is it a valid password? */
-      if (npass == 1) {
-        helper_log_err(LOG_DEBUG, "no new password supplied");
-	memset(pass, '\0', MAXPASS);
-      } else {
-        helper_log_err(LOG_DEBUG, "no valid passwords supplied");
-      }
-      return PAM_AUTHTOK_ERR;
+    if (npass != 2)   /* is it a valid password? */
+    {
+        if (npass == 1)
+        {
+            helper_log_err(LOG_DEBUG, "no new password supplied");
+            memset(pass, '\0', MAXPASS);
+        } else
+        {
+            helper_log_err(LOG_DEBUG, "no valid passwords supplied");
+        }
+        return PAM_AUTHTOK_ERR;
     }
 
-    if (lock_pwdf() != PAM_SUCCESS)
-	return PAM_AUTHTOK_LOCK_BUSY;
+    if (lock_pwdf() != PAM_SUCCESS) return PAM_AUTHTOK_LOCK_BUSY;
 
     pwd = getpwnam(forwho);
 
-    if (pwd == NULL) {
+    if (pwd == NULL)
+    {
         retval = PAM_USER_UNKNOWN;
         goto done;
     }
@@ -74,26 +77,29 @@ set_password(const char *forwho, const char *shadow, const char *remember)
     /* If real caller uid is not root we must verify that
        received old pass agrees with the current one.
        We always allow change from null pass. */
-    if (getuid()) {
-	retval = helper_verify_password(forwho, pass, 1);
-	if (retval != PAM_SUCCESS) {
-	    goto done;
-	}
+    if (getuid())
+    {
+        retval = helper_verify_password(forwho, pass, 1);
+        if (retval != PAM_SUCCESS)
+        {
+            goto done;
+        }
     }
 
     /* first, save old password */
-    if (save_old_password(forwho, pass, nremember)) {
-	retval = PAM_AUTHTOK_ERR;
-	goto done;
+    if (save_old_password(forwho, pass, nremember))
+    {
+        retval = PAM_AUTHTOK_ERR;
+        goto done;
     }
 
-    if (doshadow || is_pwd_shadowed(pwd)) {
-	retval = unix_update_shadow(forwho, towhat);
-	if (retval == PAM_SUCCESS)
-	    if (!is_pwd_shadowed(pwd))
-		retval = unix_update_passwd(forwho, "x");
-    } else {
-	retval = unix_update_passwd(forwho, towhat);
+    if (doshadow || is_pwd_shadowed(pwd))
+    {
+        retval = unix_update_shadow(forwho, towhat);
+        if (retval == PAM_SUCCESS) if (!is_pwd_shadowed(pwd)) retval = unix_update_passwd(forwho, "x");
+    } else
+    {
+        retval = unix_update_passwd(forwho, towhat);
     }
 
 done:
@@ -102,56 +108,61 @@ done:
 
     unlock_pwdf();
 
-    if (retval == PAM_SUCCESS) {
-	return PAM_SUCCESS;
-    } else {
-	return PAM_AUTHTOK_ERR;
+    if (retval == PAM_SUCCESS)
+    {
+        return PAM_SUCCESS;
+    } else
+    {
+        return PAM_AUTHTOK_ERR;
     }
 }
 
 int main(int argc, char *argv[])
 {
-	char *option;
+    char *option;
 
-	/*
-	 * Catch or ignore as many signal as possible.
-	 */
-	setup_signals();
+    /*
+     * Catch or ignore as many signal as possible.
+     */
+    setup_signals();
 
-	/*
-	 * we establish that this program is running with non-tty stdin.
-	 * this is to discourage casual use. It does *NOT* prevent an
-	 * intruder from repeatadly running this program to determine the
-	 * password of the current user (brute force attack, but one for
-	 * which the attacker must already have gained access to the user's
-	 * account).
-	 */
+    /*
+     * we establish that this program is running with non-tty stdin.
+     * this is to discourage casual use. It does *NOT* prevent an
+     * intruder from repeatadly running this program to determine the
+     * password of the current user (brute force attack, but one for
+     * which the attacker must already have gained access to the user's
+     * account).
+     */
 
-	if (isatty(STDIN_FILENO) || argc != 5 ) {
-		helper_log_err(LOG_NOTICE
-		      ,"inappropriate use of Unix helper binary [UID=%d]"
-			 ,getuid());
-		fprintf(stderr
-		 ,"This binary is not designed for running in this way\n"
-		      "-- the system administrator has been informed\n");
-		sleep(10);	/* this should discourage/annoy the user */
-		return PAM_SYSTEM_ERR;
-	}
+    if (isatty(STDIN_FILENO) || argc != 5)
+    {
+        helper_log_err(LOG_NOTICE
+                       , "inappropriate use of Unix helper binary [UID=%d]"
+                       , getuid());
+        fprintf(stderr
+                , "This binary is not designed for running in this way\n"
+                "-- the system administrator has been informed\n");
+        sleep(10);  /* this should discourage/annoy the user */
+        return PAM_SYSTEM_ERR;
+    }
 
-	/* We must be root to read/update shadow.
-	 */
-	if (geteuid() != 0) {
-	    return PAM_CRED_INSUFFICIENT;
-	}
+    /* We must be root to read/update shadow.
+     */
+    if (geteuid() != 0)
+    {
+        return PAM_CRED_INSUFFICIENT;
+    }
 
-	option = argv[2];
+    option = argv[2];
 
-	if (strcmp(option, "update") == 0) {
-	    /* Attempting to change the password */
-	    return set_password(argv[1], argv[3], argv[4]);
-	}
+    if (strcmp(option, "update") == 0)
+    {
+        /* Attempting to change the password */
+        return set_password(argv[1], argv[3], argv[4]);
+    }
 
-	return PAM_SYSTEM_ERR;
+    return PAM_SYSTEM_ERR;
 }
 
 /*

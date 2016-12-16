@@ -3,7 +3,7 @@
 "http://www.docbook.org/xml/4.3/docbookx.dtd"
 [
 <!--
-<!ENTITY pamaccess SYSTEM "pam_unix.8.xml">
+<!ENTITY pamaccess SYSTEM "pam_hash-only.8.xml">
 -->
 ]>
 
@@ -13,29 +13,29 @@
 
     <title>
       <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-      href="pam_unix.8.xml" xpointer='xpointer(//refnamediv[@id = "pam_unix-name"]/*)'/>
+      href="pam_hash-only.8.xml" xpointer='xpointer(//refnamediv[@id = "pam_hash-only-name"]/*)'/>
     </title>
 
   </articleinfo>
 
   <section>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-      href="pam_unix.8.xml" xpointer='xpointer(//refsect1[@id = "pam_unix-description"]/*)'/>
+      href="pam_hash-only.8.xml" xpointer='xpointer(//refsect1[@id = "pam_hash-only-description"]/*)'/>
   </section>
 
   <section>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-      href="pam_unix.8.xml" xpointer='xpointer(//refsect1[@id = "pam_unix-options"]/*)'/>
+      href="pam_hash-only.8.xml" xpointer='xpointer(//refsect1[@id = "pam_hash-only-options"]/*)'/>
   </section>
 
   <section>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-      href="pam_unix.8.xml" xpointer='xpointer(//refsect1[@id = "pam_unix-examples"]/*)'/>
+      href="pam_hash-only.8.xml" xpointer='xpointer(//refsect1[@id = "pam_hash-only-examples"]/*)'/>
   </section>
 
   <section>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-      href="pam_unix.8.xml" xpointer='xpointer(//refsect1[@id = "pam_unix-author"]/*)'/>
+      href="pam_hash-only.8.xml" xpointer='xpointer(//refsect1[@id = "pam_hash-only-author"]/*)'/>
   </section>
 
 </article>

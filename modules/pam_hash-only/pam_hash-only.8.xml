@@ -2,29 +2,29 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
 	"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
-<refentry id="pam_unix">
+<refentry id="pam_hash-only">
 
   <refmeta>
-    <refentrytitle>pam_unix</refentrytitle>
+    <refentrytitle>pam_hash-only</refentrytitle>
     <manvolnum>8</manvolnum>
     <refmiscinfo class="sectdesc">Linux-PAM Manual</refmiscinfo>
   </refmeta>
 
-  <refnamediv id="pam_unix-name">
-    <refname>pam_unix</refname>
+  <refnamediv id="pam_hash-only-name">
+    <refname>pam_hash-only</refname>
     <refpurpose>Module for traditional password authentication</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
-    <cmdsynopsis id="pam_unix-cmdsynopsis">
-      <command>pam_unix.so</command>
+    <cmdsynopsis id="pam_hash-only-cmdsynopsis">
+      <command>pam_hash-only.so</command>
       <arg choice="opt">
         ...
       </arg>
     </cmdsynopsis>
   </refsynopsisdiv>
 
-  <refsect1 id="pam_unix-description">
+  <refsect1 id="pam_hash-only-description">
 
     <title>DESCRIPTION</title>
 
@@ -80,13 +80,6 @@
     </para>
 
     <para>
-      The maximum length of a password supported by the pam_unix module
-      via the helper binary is <emphasis>PAM_MAX_RESP_SIZE</emphasis>
-      - currently 512 bytes. The rest of the password provided by the
-      conversation function to the module will be ignored.
-    </para>
-
-    <para>
       The password component of this module performs the task of updating
       the user's password. The default encryption hash is taken from the
       <emphasis remap='B'>ENCRYPT_METHOD</emphasis> variable from
@@ -107,7 +100,7 @@
     </para>
   </refsect1>
 
-  <refsect1 id="pam_unix-options">
+  <refsect1 id="pam_hash-only-options">
 
     <title>OPTIONS</title>
     <variablelist>
@@ -132,21 +125,6 @@
         <listitem>
           <para>
             A little more extreme than debug.
-          </para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-        <term>
-          <option>quiet</option>
-        </term>
-        <listitem>
-          <para>
-	    Turns off informational messages namely messages about
-	    session open and close via
-            <citerefentry>
-              <refentrytitle>syslog</refentrytitle><manvolnum>3</manvolnum>
-            </citerefentry>.
           </para>
         </listitem>
       </varlistentry>
@@ -217,13 +195,13 @@
       </varlistentry>
       <varlistentry>
         <term>
-          <option>authtok_type=<replaceable>type</replaceable></option>
+          <option>not_set_pass</option>
         </term>
         <listitem>
           <para>
-            This argument can be used to modify the password prompt
-            when changing passwords to include the type of the password.
-            Empty by default.
+            This argument is used to inform the module that it is not to
+            pay attention to/make available the old or new passwords from/to
+            other (stacked) password modules.
           </para>
         </listitem>
       </varlistentry>
@@ -247,8 +225,6 @@
             user are saved in <filename>/etc/security/opasswd</filename>
             in order to force password change history and keep the user
             from alternating between the same password too frequently.
-            The MD5 password hash algorithm is used for storing the
-            old passwords.
             Instead of this option the <command>pam_pwhistory</command>
             module should be used.
           </para>
@@ -366,25 +342,6 @@
           </para>
         </listitem>
       </varlistentry>
-      <varlistentry>
-        <term>
-          <option>no_pass_expiry</option>
-        </term>
-        <listitem>
-          <para>
-            When set ignore password expiration as defined by the
-            <emphasis>shadow</emphasis> entry of the user. The option has an
-            effect only in case <emphasis>pam_unix</emphasis> was not used
-            for the authentication or it returned authentication failure
-            meaning that other authentication source or method succeeded.
-            The example can be public key authentication in
-            <emphasis>sshd</emphasis>. The module will return
-            <emphasis remap='B'>PAM_SUCCESS</emphasis> instead of eventual
-            <emphasis remap='B'>PAM_NEW_AUTHTOK_REQD</emphasis> or
-            <emphasis remap='B'>PAM_AUTHTOK_EXPIRED</emphasis>.
-          </para>
-        </listitem>
-      </varlistentry>
     </variablelist>
     <para>
       Invalid arguments are logged with  <citerefentry>
@@ -393,7 +350,7 @@
     </para>
   </refsect1>
 
-  <refsect1 id="pam_unix-types">
+  <refsect1 id="pam_hash-only-types">
     <title>MODULE TYPES PROVIDED</title>
     <para>
       All module types (<option>account</option>, <option>auth</option>,
@@ -401,7 +358,7 @@
     </para>
   </refsect1>
 
-  <refsect1 id='pam_unix-return_values'>
+  <refsect1 id='pam_hash-only-return_values'>
     <title>RETURN VALUES</title>
     <variablelist>
       <varlistentry>
@@ -415,26 +372,26 @@
     </variablelist>
      </refsect1>
 
-  <refsect1 id='pam_unix-examples'>
+  <refsect1 id='pam_hash-only-examples'>
     <title>EXAMPLES</title>
     <para>
       An example usage for <filename>/etc/pam.d/login</filename>
       would be:
       <programlisting>
 # Authenticate the user
-auth       required   pam_unix.so
+auth       required   pam_hash-only.so
 # Ensure users account and password are still active
-account    required   pam_unix.so
-# Change the user's password, but at first check the strength
+account    required   pam_hash-only.so
+# Change the users password, but at first check the strength
 # with pam_cracklib(8)
 password   required   pam_cracklib.so retry=3 minlen=6 difok=3
-password   required   pam_unix.so use_authtok nullok md5
-session    required   pam_unix.so
+password   required   pam_hash-only.so use_authtok nullok md5
+session    required   pam_hash-only.so
       </programlisting>
     </para>
   </refsect1>
 
-  <refsect1 id='pam_unix-see_also'>
+  <refsect1 id='pam_hash-only-see_also'>
     <title>SEE ALSO</title>
     <para>
       <citerefentry>
@@ -452,10 +409,10 @@ session    required   pam_unix.so
     </para>
   </refsect1>
 
-  <refsect1 id='pam_unix-author'>
+  <refsect1 id='pam_hash-only-author'>
     <title>AUTHOR</title>
       <para>
-        pam_unix was written by various people.
+        pam_hash-only was written by various people.
       </para>
   </refsect1>
 

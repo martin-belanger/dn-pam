@@ -2,7 +2,7 @@
 # Copyright (c) 2005, 2006, 2008 Thorsten Kukuk <kukuk@thkukuk.de>
 #
 
-SUBDIRS = pam_dn_cms
+SUBDIRS = pam_hash-only
 
 CLEANFILES = *~
 

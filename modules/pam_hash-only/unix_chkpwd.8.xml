@@ -30,7 +30,7 @@
 
     <para>
       <emphasis>unix_chkpwd</emphasis> is a helper program for the
-      <emphasis>pam_unix</emphasis> module that verifies the
+      <emphasis>pam_hash-only</emphasis> module that verifies the
       password of the current user. It also checks password and account
       expiration dates in <emphasis>shadow</emphasis>. It is not intended to
       be run directly from the command line and logs a security violation if
@@ -43,7 +43,7 @@
 
     <para>
       The interface of the helper - command line options, and input/output
-      data format are internal to the <emphasis>pam_unix</emphasis>
+      data format are internal to the <emphasis>pam_hash-only</emphasis>
       module and it should not be called directly from applications.
     </para>
   </refsect1>
@@ -52,7 +52,7 @@
     <title>SEE ALSO</title>
     <para>
       <citerefentry>
-	<refentrytitle>pam_unix</refentrytitle><manvolnum>8</manvolnum>
+	<refentrytitle>pam_hash-only</refentrytitle><manvolnum>8</manvolnum>
       </citerefentry>
     </para>
   </refsect1>

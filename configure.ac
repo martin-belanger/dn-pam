@@ -447,7 +447,7 @@ AC_SUBST(LIBDB)
 AM_CONDITIONAL([HAVE_LIBDB], [test ! -z "$LIBDB"])
 
 AC_ARG_ENABLE([nis],
-        AS_HELP_STRING([--disable-nis], [Disable building NIS/YP support in pam_unix]))
+        AS_HELP_STRING([--disable-nis], [Disable building NIS/YP support in pam_hash-only]))
 
 AS_IF([test "x$enable_nis" != "xno"], [
   old_CFLAGS=$CFLAGS
@@ -609,5 +609,5 @@ AM_CONDITIONAL([HAVE_KEY_MANAGEMENT], [test "$have_key_syscalls" = 1])
 dnl Files to be created from when we run configure
 AC_CONFIG_FILES([Makefile \
 	modules/Makefile \
-	modules/pam_dn_cms/Makefile ])
+	modules/pam_hash-only/Makefile ])
 AC_OUTPUT
